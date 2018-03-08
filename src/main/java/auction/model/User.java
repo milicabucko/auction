@@ -1,4 +1,4 @@
-package model;
+package auction.model;
 
 import java.io.Serializable;
 
@@ -33,6 +33,14 @@ public class User implements Serializable{
 	private Firm firma;
 	
 	public User() {
+	}
+
+	public String getTipKorisnika() {
+		return tipKorisnika;
+	}
+
+	public void setTipKorisnika(String tipKorisnika) {
+		this.tipKorisnika = tipKorisnika;
 	}
 
 	public User(String ime, String prezime, String email, String lozinka, String korisnickoIme, String grad,
