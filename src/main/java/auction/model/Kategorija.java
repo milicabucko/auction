@@ -1,19 +1,14 @@
 package auction.model;
 
 import java.io.Serializable;
-import java.util.Collection;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 
 @Entity
-public class Category implements Serializable{
+public class Kategorija implements Serializable{
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -21,13 +16,16 @@ public class Category implements Serializable{
 	
 	private String ime;
 	
-	@JsonIgnore
-	@OneToMany(mappedBy = "kategorija")
-	private Collection<Firm> firme;
-	
-	public Category() {
+	public Kategorija() {
 		// TODO Auto-generated constructor stub
 	}
+
+	public Kategorija(String ime) {
+		super();
+		this.ime = ime;
+	}
+
+
 
 	public Long getId() {
 		return id;
@@ -45,12 +43,4 @@ public class Category implements Serializable{
 		this.ime = ime;
 	}
 
-	public Collection<Firm> getFirme() {
-		return firme;
-	}
-
-	public void setFirme(Collection<Firm> firme) {
-		this.firme = firme;
-	}
-	
 }

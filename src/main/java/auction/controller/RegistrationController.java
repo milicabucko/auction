@@ -19,11 +19,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.view.RedirectView;
 
-import auction.model.Category;
-import auction.model.User;
-import auction.service.CategoryService;
-import auction.service.UserService;
+import auction.model.Kategorija;
+import auction.model.Korisnik;
+import auction.service.KategorijaService;
+import auction.service.KorisnikService;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -34,27 +35,27 @@ import java.util.Map;
 public class RegistrationController {
 	
 	@Autowired
-	RuntimeService runtimeService;
+	private RuntimeService runtimeService;
 	
 	@Autowired
-	TaskService taskService;
+	private TaskService taskService;
 	
 	@Autowired
-	UserService userService;
+	private IdentityService identityService;
 	
 	@Autowired
-	CategoryService categoryService;
+	private KorisnikService korisnikService;
 	
 	@Autowired
-	IdentityService identityService;
+	private KategorijaService kategorijaService;
 	
 	public static final String FIRMA = "firma";
 	public static boolean groupsSetted = false;
 	
-	@GetMapping("/activateProcess")
-	public ResponseEntity<Map<String,Object>> getTask() {
-		System.out.println("Hellooo");
-		runtimeService.startProcessInstanceByKey("registracija");
+	@GetMapping("/atp")
+	public ResponseEntity<Map<String,Object>> atp() {
+		
+		runtimeService.startProcessInstanceByKey("test");
 		Task task = taskService.createTaskQuery().active().list()
 								.get(taskService.createTaskQuery()
 								.active().list().size()-1);
@@ -65,36 +66,31 @@ public class RegistrationController {
 		return new ResponseEntity<Map<String,Object>>(taskMap, HttpStatus.OK);
 	}
 	
+	
+	@GetMapping("/activateProcess")
+	public ResponseEntity<Map<String,Object>> getTask() {
+		
+		runtimeService.startProcessInstanceByKey("registracija");
+		Task task = taskService.createTaskQuery().active().list().get(taskService.createTaskQuery().active().list().size()-1);
+		Map<String, Object> taskMap = new HashMap<>();
+		taskMap.put("ime", task.getName());
+		taskMap.put("id", task.getId());
+		System.out.println(taskMap.get("ime")+ " i id" + taskMap.get("id"));
+		return new ResponseEntity<Map<String,Object>>(taskMap, HttpStatus.OK);
+	}
+	
 	@PostMapping("/{taskId}")
-	public ResponseEntity<Map<String,Object>> registration(@PathVariable String taskId, @RequestBody User korisnik){
+	public ResponseEntity<Map<String,Object>> registration(@PathVariable String taskId, @RequestBody Korisnik korisnik){
 		
 		
-		if (groupsSetted == true) {
-			Group korisnikG;
-			
-			korisnikG = identityService.newGroup("korisnik");
-			korisnikG.setName("korisnik");
-			korisnikG.setType("assigment");
-			identityService.saveGroup(korisnikG);
-			
-			Group firmaG;
-			
-			firmaG = identityService.newGroup("firma");
-			firmaG.setName("firma");
-			firmaG.setType("assigment");
-			identityService.saveGroup(firmaG);
-			
-			groupsSetted = true;
-		}
+		korisnik.setPotvrdjenMail(false);
+		korisnikService.save(korisnik);
 		
-		System.out.println("Hellooo");
-		
-		userService.saveUser(korisnik);
+		//Da znas koji je task u pitanju
 		Task task = taskService.createTaskQuery().active().taskId(taskId).singleResult();
-		System.out.println("aaaaa " + task.getProcessInstanceId());
-		
-		HashMap<String, Object> variables = (HashMap<String, Object>) runtimeService
-				.getVariables(task.getProcessInstanceId());
+
+		//Varijable koje se koriste u toku procesa
+		HashMap<String, Object> variables = (HashMap<String, Object>) runtimeService.getVariables(task.getProcessInstanceId());
 		
 		org.activiti.engine.identity.User newUser;
 		
@@ -108,46 +104,56 @@ public class RegistrationController {
 		identityService.createMembership(newUser.getId(), korisnik.getTipKorisnika());
 		
 		variables.put("korisnik", korisnik);
-		System.out.println(variables + "   variables");
+	
+		//Zavrsi taj trenutni task (prva forma za korisnika) kako bi se mogla prebaciti na sledeci
 		taskService.complete(taskId, variables);
 		
 		if(FIRMA.equals(korisnik.getTipKorisnika())){
-			Task taskFirma = taskService.createTaskQuery().active().list()
-					.get(taskService.createTaskQuery().active().list().size() - 1);
+			//Napravi novi task za firmu
+			Task taskFirma = taskService.createTaskQuery().active().list().get(taskService.createTaskQuery().active().list().size() - 1);
 			
 			Map<String, Object> taskMap = new HashMap<String, Object>();
+			//vrati task id kako bi znala kasnije koji task da izvrsis
 			taskMap.put("taskId", taskFirma.getId());
-			taskMap.put("ime", taskFirma.getName());
-			taskMap.put("korisnickoime", korisnik.getKorisnickoIme());
-			System.out.println("firma task id " + taskFirma.getId() + " task ime " + taskFirma.getName());
+			taskMap.put("korisnik", korisnik);
+			
 			return new ResponseEntity<Map<String,Object>>(taskMap, HttpStatus.OK);
 		}
 		
 		return new ResponseEntity<Map<String,Object>>(variables, HttpStatus.OK);
 	}
 	
-	@PostMapping("/firm/{taskId}")
-	public ResponseEntity<Map<String,Object>> registrationFirm(@PathVariable String taskId, @RequestBody User korisnik){
+	@PostMapping("/firma/{taskId}")
+	public ResponseEntity<Map<String,Object>> registrationFirm(@PathVariable String taskId, @RequestBody Korisnik k){
 		
+		Korisnik korisnik = korisnikService.save(k);
 		
-		return new ResponseEntity<>(HttpStatus.OK);
+		//Uzmi task koji je vezan za firmu
+		Task task = taskService.createTaskQuery().active().taskId(taskId).singleResult();
+		
+		//definisi izlazne varijable
+		HashMap<String, Object> variables = (HashMap<String, Object>) runtimeService.getVariables(task.getProcessInstanceId());
+		variables.put("korisnik", korisnik);
+		
+		//Zavrsi task
+		taskService.complete(taskId, variables);
+		
+		return new ResponseEntity<>(variables, HttpStatus.OK);
 	}
 	
-	@GetMapping("/getCategory")
-	public ResponseEntity<List<Category>> getCategory() {
-		System.out.println("Pokupi sve kategorije");
-		List<Category> kategorije = categoryService.getCategory();
-		
-		return new ResponseEntity<List<Category>>(kategorije, HttpStatus.OK);
+	@GetMapping("/kategorije")
+	public ResponseEntity<Collection<Kategorija>> getAllKategorije() {
+		Collection<Kategorija> kategorije = kategorijaService.findAll();
+		return new ResponseEntity<Collection<Kategorija>>(kategorije, HttpStatus.OK);
 	}
 	
-//	@GetMapping
-//	public RedirectView confirmRegistration(String token, @RequestParam("task") String task) {
-//		Execution execution = runtimeService.createExecutionQuery().processInstanceId(task).signalEventSubscriptionName("Activate user").singleResult();
-//		runtimeService.signalEventReceived("Activate user", execution.getId());
-//		return new RedirectView("http://localhost:4200/");
-//		
-//	}
+	@GetMapping("/confirmRegistration")
+	public RedirectView confirmRegistration(@RequestParam("korisnickoIme") String korisnickoIme, @RequestParam("task") String task) {
+		Execution execution = runtimeService.createExecutionQuery().processInstanceId(task).signalEventSubscriptionName("aktiviraj").singleResult();
+		runtimeService.signalEventReceived("aktiviraj", execution.getId());
+		return new RedirectView("http://localhost:4200/login");
+		
+	}
 	
 
 }
