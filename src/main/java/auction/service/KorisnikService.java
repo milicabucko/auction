@@ -1,5 +1,7 @@
 package auction.service;
 
+import java.util.Collection;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -25,6 +27,18 @@ public class KorisnikService {
 		korisnik.setPotvrdjenMail(true);
 		korisnikRepository.save(korisnik);
 		System.out.println("Uspesno registrovan korisnik!");
+	}
+
+	public void deleteAll() {
+		korisnikRepository.deleteAll();
+	}
+	
+	public Collection<Korisnik> findByKategorija(String kategorija) {
+		return korisnikRepository.findByKategorija(kategorija);
+	}
+
+	public Korisnik findOne(Long korisnikID) {
+		return korisnikRepository.findOne(korisnikID);
 	}
 
 }

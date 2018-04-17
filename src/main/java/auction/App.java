@@ -13,6 +13,8 @@ public class App {
 		ConfigurableApplicationContext applicationContext = SpringApplication.run(App.class, args);
 		applicationContext.getBean(InitializationService.class).initializeGroups();
 		applicationContext.getBean(InitializationService.class).initializeKategorije();
+		applicationContext.getBean(InitializationService.class).initializeKorisnike();
+		applicationContext.getBean(InitializationService.class).initializeFirme();
 	}
 
 }
