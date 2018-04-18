@@ -9,5 +9,7 @@ import auction.model.Korisnik;
 public interface KorisnikRepository extends JpaRepository<Korisnik, Long> {
 	
 	Collection<Korisnik> findByKategorija(String kategorija);
+	
+	Korisnik findByImeFirme(String ime);
 
 }

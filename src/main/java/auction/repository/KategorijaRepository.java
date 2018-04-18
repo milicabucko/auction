@@ -6,6 +6,5 @@ import auction.model.Kategorija;
 
 public interface KategorijaRepository extends JpaRepository<Kategorija, Long>{
 	
-	
 
 }

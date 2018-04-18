@@ -88,9 +88,9 @@ public class InitializationService {
 		Korisnik korisnik3 = new Korisnik("Tirion", "Lanister", "tl@gmail.com", "cc", "cc", "Los Angeles", "Nakatomi 123/12", "21000", "korisnik", true, null, null, null, 45.267136, 21.833549);
 
 		
-		identityService.deleteUser("john");
-		identityService.deleteUser("leonardo");
-		identityService.deleteUser("tirion");
+		identityService.deleteUser("aa");
+		identityService.deleteUser("bb");
+		identityService.deleteUser("cc");
 		
 		korisnikService.save(korisnik1);
 		korisnikService.save(korisnik2);
@@ -133,9 +133,30 @@ public class InitializationService {
 		Korisnik korisnik1 = new Korisnik("Nektar", "Nektarovic", "nektar@gmail.com", "nektar", "nektar", "Los Angeles", "Nakatomi 123/12", "21000", "firma", true, "Nektar", "proizvodnja pica", 1000.0, 45.267136, 19.833549);
 		Korisnik korisnik2 = new Korisnik("Nektar", "Nektarovic", "nektar@gmail.com", "kola", "kola", "Los Angeles", "Nakatomi 123/12", "21000", "firma", true, "Coca Cola", "proizvodnja pica", 1000.0, 45.267136, 20.833549);
 
+		identityService.deleteUser("nektar");
+		identityService.deleteUser("kola");
 		
 		korisnikService.save(korisnik1);
 		korisnikService.save(korisnik2);
+		
+		org.activiti.engine.identity.User activityUser1;
+		org.activiti.engine.identity.User activityUser2;
+		
+		activityUser1 = identityService.newUser(korisnik1.getKorisnickoIme());
+		activityUser1.setFirstName(korisnik1.getIme());
+		activityUser1.setLastName(korisnik1.getPrezime());
+		activityUser1.setEmail(korisnik1.getEmail());
+		activityUser1.setPassword(korisnik1.getLozinka());
+		identityService.saveUser(activityUser1);
+		identityService.createMembership(activityUser1.getId(), korisnik1.getTipKorisnika());
+		
+		activityUser2 = identityService.newUser(korisnik2.getKorisnickoIme());
+		activityUser2.setFirstName(korisnik2.getIme());
+		activityUser2.setLastName(korisnik2.getPrezime());
+		activityUser2.setEmail(korisnik2.getEmail());
+		activityUser2.setPassword(korisnik2.getLozinka());
+		identityService.saveUser(activityUser2);
+		identityService.createMembership(activityUser2.getId(), korisnik2.getTipKorisnika());
 		
 		System.out.println("\nInicijalizacija firmi!\n");
 		

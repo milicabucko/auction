@@ -54,9 +54,20 @@ public class NabavkaService {
 			}
 			candidates.add(firma);
 		}
-		
+
 		return candidates;
 		
+	}
+	
+	public ArrayList<String> odbacivanjeSuvisnih(ZahtevZaNabavku zahtev, Korisnik korisnik, ArrayList<Korisnik> firmee) {
+		
+		//TODO: ukoliko ima vise firmi koje zadovoljavaju (vise od maxBrojPonuda, onda uzmi najbolje kandidate i uzmi ih da je njihov
+		// broj == maxBrojPonuda)
+		ArrayList<String> firme = new ArrayList<>();
+		for (Korisnik firma : firmee) {
+			firme.add(firma.getImeFirme());
+		}
+		return firme;
 	}
 	
 	

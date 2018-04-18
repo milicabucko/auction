@@ -15,8 +15,8 @@ public class HelloService {
 		return elementi;
 	}
 	
-	public void helloWorld() {
-		System.out.println("Hello World!");
+	public void helloWorld(String kome) {
+		System.out.println("Hello World " + kome);
 	}
 
 }

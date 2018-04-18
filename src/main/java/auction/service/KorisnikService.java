@@ -5,14 +5,19 @@ import java.util.Collection;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import auction.model.Kategorija;
 import auction.model.Korisnik;
+import auction.repository.KategorijaRepository;
 import auction.repository.KorisnikRepository;
 
 @Service
 public class KorisnikService {
 	
 	@Autowired
-	public KorisnikRepository korisnikRepository;
+	private KorisnikRepository korisnikRepository;
+	
+	@Autowired
+	private KategorijaRepository kategorijaRepository;
 	
 	public Korisnik save(Korisnik user){
 		return korisnikRepository.save(user);
@@ -39,6 +44,14 @@ public class KorisnikService {
 
 	public Korisnik findOne(Long korisnikID) {
 		return korisnikRepository.findOne(korisnikID);
+	}
+	
+	public Korisnik findByImeFirme(String ime) {
+		return korisnikRepository.findByImeFirme(ime);
+	}
+	
+	public Collection<Kategorija> getAllKategorijePosla() {
+		return kategorijaRepository.findAll();
 	}
 
 }
