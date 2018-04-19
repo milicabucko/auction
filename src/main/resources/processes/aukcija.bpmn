@@ -22,9 +22,11 @@
       <multiInstanceLoopCharacteristics isSequential="false" activiti:collection="firme" activiti:elementVariable="firma"></multiInstanceLoopCharacteristics>
       <startEvent id="startevent2" name="Start"></startEvent>
       <endEvent id="endevent2" name="End"></endEvent>
-      <serviceTask id="servicetask6" name="Posalji firmama zahtev za nabavku" activiti:expression="${mailService.posaljiZahtevZaNabavkuFirmi(zahtev, firma)}" activiti:resultVariableName="asignee"></serviceTask>
+      <serviceTask id="servicetask6" name="Posalji firmama zahtev za nabavku" activiti:expression="${mailService.posaljiZahtevZaNabavkuFirmi(zahtev, firma)}" activiti:resultVariableName="assignee"></serviceTask>
       <sequenceFlow id="flow23" sourceRef="startevent2" targetRef="servicetask6"></sequenceFlow>
-      <sequenceFlow id="flow24" sourceRef="servicetask6" targetRef="endevent2"></sequenceFlow>
+      <userTask id="usertask2" name="Unos podataka za ponudu" activiti:assignee="${assignee}"></userTask>
+      <sequenceFlow id="flow24" sourceRef="servicetask6" targetRef="usertask2"></sequenceFlow>
+      <sequenceFlow id="flow25" sourceRef="usertask2" targetRef="endevent2"></sequenceFlow>
     </subProcess>
     <endEvent id="endevent3" name="End"></endEvent>
     <sequenceFlow id="flow12" sourceRef="servicetask2" targetRef="endevent3"></sequenceFlow>
@@ -70,13 +72,16 @@
         <omgdc:Bounds height="151.0" width="521.0" x="262.0" y="324.0"></omgdc:Bounds>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape bpmnElement="startevent2" id="BPMNShape_startevent2">
-        <omgdc:Bounds height="35.0" width="35.0" x="342.0" y="384.0"></omgdc:Bounds>
+        <omgdc:Bounds height="35.0" width="35.0" x="280.0" y="374.0"></omgdc:Bounds>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape bpmnElement="endevent2" id="BPMNShape_endevent2">
-        <omgdc:Bounds height="35.0" width="35.0" x="612.0" y="384.0"></omgdc:Bounds>
+        <omgdc:Bounds height="35.0" width="35.0" x="660.0" y="374.0"></omgdc:Bounds>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape bpmnElement="servicetask6" id="BPMNShape_servicetask6">
-        <omgdc:Bounds height="67.0" width="105.0" x="420.0" y="374.0"></omgdc:Bounds>
+        <omgdc:Bounds height="67.0" width="105.0" x="350.0" y="358.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="usertask2" id="BPMNShape_usertask2">
+        <omgdc:Bounds height="67.0" width="105.0" x="500.0" y="358.0"></omgdc:Bounds>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape bpmnElement="endevent3" id="BPMNShape_endevent3">
         <omgdc:Bounds height="35.0" width="35.0" x="663.0" y="45.0"></omgdc:Bounds>
@@ -115,12 +120,16 @@
         <omgdi:waypoint x="470.0" y="210.0"></omgdi:waypoint>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="flow23" id="BPMNEdge_flow23">
-        <omgdi:waypoint x="377.0" y="401.0"></omgdi:waypoint>
-        <omgdi:waypoint x="420.0" y="407.0"></omgdi:waypoint>
+        <omgdi:waypoint x="315.0" y="391.0"></omgdi:waypoint>
+        <omgdi:waypoint x="350.0" y="391.0"></omgdi:waypoint>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="flow24" id="BPMNEdge_flow24">
-        <omgdi:waypoint x="525.0" y="407.0"></omgdi:waypoint>
-        <omgdi:waypoint x="612.0" y="401.0"></omgdi:waypoint>
+        <omgdi:waypoint x="455.0" y="391.0"></omgdi:waypoint>
+        <omgdi:waypoint x="500.0" y="391.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow25" id="BPMNEdge_flow25">
+        <omgdi:waypoint x="605.0" y="391.0"></omgdi:waypoint>
+        <omgdi:waypoint x="660.0" y="391.0"></omgdi:waypoint>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="flow12" id="BPMNEdge_flow12">
         <omgdi:waypoint x="565.0" y="62.0"></omgdi:waypoint>
