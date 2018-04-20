@@ -1,5 +1,6 @@
 package auction.service;
 
+import java.util.ArrayList;
 import java.util.Collection;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,6 +53,10 @@ public class KorisnikService {
 	
 	public Collection<Kategorija> getAllKategorijePosla() {
 		return kategorijaRepository.findAll();
+	}
+
+	public Collection<Korisnik> findByKategorijaAndIdNotIn(String kategorija, Collection<Long> ids) {
+		return korisnikRepository.findByKategorijaAndIdNotIn(kategorija, ids);
 	}
 
 }

@@ -3,9 +3,12 @@ package auction.controller;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
+import org.activiti.engine.RuntimeService;
 import org.activiti.engine.TaskService;
 import org.activiti.engine.task.Task;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +24,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import auction.model.Korisnik;
 import auction.model.Ponuda;
+import auction.model.ZahtevZaNabavku;
 import auction.service.KorisnikService;
+import auction.service.NabavkaService;
 import auction.service.PointsService;
 import auction.service.PonudaService;
 
@@ -41,6 +46,12 @@ public class PonudaController {
 	
 	@Autowired
 	private TaskService taskService;
+	
+	@Autowired
+	private RuntimeService runtimeService;
+	
+	@Autowired
+	private NabavkaService nabavkaService;
 	
 	@GetMapping("/getAllActiveUserTasks/{korisnikId}")
 	public ArrayList<String> getAllActiveUserTasks(@PathVariable Long korisnikId) {
@@ -71,7 +82,33 @@ public class PonudaController {
 		Korisnik korisnik = korisnikService.findOne(korisnikId);
 		ponuda.setFirma(korisnik);
 		Ponuda savedOffer = ponudaService.save(ponuda);
+		//Da znas koji je task u pitanju
+		Task task = taskService.createTaskQuery().active().taskId(taskId).singleResult();
+		HashMap<String, Object> variables = (HashMap<String, Object>) runtimeService.getVariables(task.getProcessInstanceId());
+		variables.put("ponuda", ponuda);
+		taskService.complete(taskId, variables);
+		
 		return new ResponseEntity<Ponuda>(savedOffer, HttpStatus.OK);
 	}
+	
+	
+	
+	@GetMapping("/ponude/getSviKorisnikoviZahtevi/{korisnikId}")
+	public ResponseEntity<Collection<ZahtevZaNabavku>> getSviKorisnikoviZahtevi(@PathVariable Long korisnikId){
+		Collection<ZahtevZaNabavku> zahtevi = nabavkaService.findByKorisnik(korisnikService.findOne(korisnikId));
+		return new ResponseEntity<Collection<ZahtevZaNabavku>>(zahtevi, HttpStatus.OK);
+	}
+	
+	
+	@GetMapping("/zahtev/getSvePonude/{zahtevId}")
+	public ResponseEntity<Collection<Ponuda>> getAllSentOffersRanked(@PathVariable Long zahtevId){
+		
+		Task task = taskService.createTaskQuery().active().list().get(taskService.createTaskQuery().active().list().size()-1);
+		
+		Collection<Ponuda> ponude = ponudaService.rangirajPrikupljenePonude(nabavkaService.findOne(zahtevId));
+		return new ResponseEntity<Collection<Ponuda>>(ponude, HttpStatus.OK);
+	}
+	
+	
 	
 }

@@ -115,5 +115,27 @@ public class AukcijaController {
 		return new RedirectView("http://localhost:4200/");
 	}
 	
+	
+	@GetMapping("/nemaDovoljnoPonuda")
+	public RedirectView nemaDovoljnoPonuda(@RequestParam("decision") String decision, @RequestParam("task") String task) {
+		
+		if (decision.equals(Constants.saljiNovimFirmama)) {
+			Execution execution = runtimeService.createExecutionQuery().processInstanceId(task).signalEventSubscriptionName("saljiNovimFirmama").singleResult();
+			runtimeService.signalEventReceived("saljiNovimFirmama", execution.getId());
+		}
+		else if (decision.equals(Constants.neSaljiNovimFirmama)){
+			Execution execution = runtimeService.createExecutionQuery().processInstanceId(task).signalEventSubscriptionName("neSaljiNovimFirmama").singleResult();
+			runtimeService.signalEventReceived("neSaljiNovimFirmama", execution.getId());
+		}
+		else {
+			Execution execution = runtimeService.createExecutionQuery().processInstanceId(task).signalEventSubscriptionName("odluciNaOsnovuPostojecihFirmi").singleResult();
+			runtimeService.signalEventReceived("odluciNaOsnovuPostojecihFirmi", execution.getId());
+		}
+		
+		return new RedirectView("http://localhost:4200/");
+	}
+	
+	
+	
 
 }

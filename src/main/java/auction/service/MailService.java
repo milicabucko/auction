@@ -214,7 +214,60 @@ public class MailService {
 		
 	}
 	
+	public ArrayList<Long> nemaDovoljnoPonudaMail(Korisnik korisnik, ArrayList<Long> ponude, String task) {
+		
+		MimeMessage message = mailSender.createMimeMessage();
+		MimeMessageHelper messageHelper;
+		try {
+			messageHelper = new MimeMessageHelper(message, true);
+			messageHelper.setFrom("boxboux@gmail.com");
+			messageHelper.setTo("boxboux@gmail.com");
+			messageHelper.setSubject("Upozorenje za ponude - AukcijaApp");
+			messageHelper.setText(nemaDovoljnoPonudaMailText(korisnik, ponude, task));
+			mailSender.send(message);
+		} catch (MessagingException e) {
+			e.printStackTrace();
+		}
+		
+		System.out.println("Mejl upozorenja za ponude uspesno poslat!");
+		
+		
+		return ponude;
+	}
 	
+	public String nemaDovoljnoPonudaMailText(Korisnik korisnik, ArrayList<Long> ponude, String task) {
+		
+		StringBuilder message = new StringBuilder();
+		message.append("Postovani " + korisnik.getIme() + ", ");
+		message.append("\n\n");
+		message.append("Broj poslatih zahteva je " + ponude.size() + " sto je manje od ocekivanog!");
+		message.append("\n");
+		message.append("\n\n");
+		message.append("Ukoliko se slazete da nastavite posaljete zahtev dodatnim firmama, kliknite na link ispod: ");
+		message.append("\n\n");
+		message.append("http://localhost:" + InitializationService.getServerPort() 
+		+ "/aukcija/nemaDovoljnoPonuda?decision=" + Constants.saljiNovimFirmama 
+		+ "&task=" + task);
+		message.append("\n\n");
+		message.append("Ukoliko se ne slazete da posaljete novim firmama vec da napravite odluku na osnovu postojecih, kliknite na link ispod: ");
+		message.append("\n\n");
+		message.append("http://localhost:" + InitializationService.getServerPort() 
+		+ "/aukcija/nemaDovoljnoPonuda?decision=" + Constants.odluciNaOsnovuPostojecihFirmi 
+		+ "&task=" + task);
+		message.append("\n\n");
+		message.append("Ukoliko zelite da ponistite zahtev, kliknite na link ispod: ");
+		message.append("\n\n");
+		message.append("http://localhost:" + InitializationService.getServerPort() 
+		+ "/aukcija/nemaDovoljnoPonuda?decision=" + Constants.neSaljiNovimFirmama 
+		+ "&task=" + task);
+		message.append("\n\n");
+		message.append("Hvala Vam, ");
+		message.append("\n");
+		message.append("AukcijaApp");
+		
+		return message.toString();
+		
+	}	
 	
 	
 }
