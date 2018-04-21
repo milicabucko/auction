@@ -1,5 +1,7 @@
 package auction.model;
 
+import java.io.Serializable;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -7,7 +9,7 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 
 @Entity
-public class Ponuda {
+public class Ponuda implements Serializable{
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -27,12 +29,17 @@ public class Ponuda {
 	
 	private Double poeni;
 	
+	private String zahtevZaPojasnjenje;
+
+	private String pojasnjenje;
+	
+	
 	public Ponuda() {
 		// TODO Auto-generated constructor stub
 	}
 
 	public Ponuda(ZahtevZaNabavku zahtevZaNabavku, Korisnik firma, String status, Double cena, String rokZaIzvrsavanje,
-			Double poeni) {
+			Double poeni, String zahtevZaPojasnjenje, String pojasnjenje) {
 		super();
 		this.zahtevZaNabavku = zahtevZaNabavku;
 		this.firma = firma;
@@ -40,6 +47,8 @@ public class Ponuda {
 		this.cena = cena;
 		this.rokZaIzvrsavanje = rokZaIzvrsavanje;
 		this.poeni = poeni;
+		this.zahtevZaPojasnjenje = zahtevZaPojasnjenje;
+		this.pojasnjenje = pojasnjenje;
 	}
 
 	public Long getId() {
@@ -96,6 +105,22 @@ public class Ponuda {
 
 	public void setPoeni(Double poeni) {
 		this.poeni = poeni;
+	}
+
+	public String getZahtevZaPojasnjenje() {
+		return zahtevZaPojasnjenje;
+	}
+
+	public void setZahtevZaPojasnjenje(String zahtevZaPojasnjenje) {
+		this.zahtevZaPojasnjenje = zahtevZaPojasnjenje;
+	}
+
+	public String getPojasnjenje() {
+		return pojasnjenje;
+	}
+
+	public void setPojasnjenje(String pojasnjenje) {
+		this.pojasnjenje = pojasnjenje;
 	}
 	
 }

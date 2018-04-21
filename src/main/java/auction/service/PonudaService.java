@@ -63,6 +63,20 @@ public class PonudaService {
 		return ponudaRepository.findByZahtevZaNabavkuAndStatusIn(zahtevZaNabavku, statusi);
 	}
 	
+	public Collection<Ponuda> findByZahtevZaNabavku(ZahtevZaNabavku zahtevZaNabavku) {
+		return ponudaRepository.findByZahtevZaNabavku(zahtevZaNabavku);
+	}
+
+	public void delete(Ponuda ponuda) {
+		ponudaRepository.delete(ponuda);
+	}
+	
+	public void sacuvajPonuduSaDodatnimObjasnjenjem(Ponuda ponudaZaPojasnjenje, String pojasnjenje) {
+		System.out.println("Sacuvaj ponudu sa dodatnim pojasnjenjem!");
+		ponudaZaPojasnjenje.setPojasnjenje(pojasnjenje);
+		ponudaRepository.save(ponudaZaPojasnjenje);
+	}
+	
 	
 	
 }
