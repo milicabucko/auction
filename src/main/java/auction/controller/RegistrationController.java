@@ -52,6 +52,24 @@ public class RegistrationController {
 	public static final String FIRMA = "firma";
 	public static boolean groupsSetted = false;
 	
+	@GetMapping("/login/{korisnickoIme}/{lozinka}")
+	public ResponseEntity<Korisnik> login(@PathVariable String korisnickoIme, @PathVariable String lozinka) {
+		Korisnik korisnik = korisnikService.findByKorisnickoImeAndLozinka(korisnickoIme, lozinka);
+		if (korisnik == null) {
+			Korisnik k = new Korisnik();
+			k.setId(0l);
+			return new ResponseEntity<Korisnik>(k, HttpStatus.OK);
+		}
+		return new ResponseEntity<Korisnik>(korisnik, HttpStatus.OK);
+	}
+	
+	@GetMapping("/activeUser/{id}")
+	public ResponseEntity<Korisnik> activeUser(@PathVariable Long id) {
+		Korisnik korisnik = korisnikService.findOne(id);
+		return new ResponseEntity<Korisnik>(korisnik, HttpStatus.OK);
+	}
+	
+	
 	@GetMapping("/atp")
 	public ResponseEntity<Map<String,Object>> atp() {
 		

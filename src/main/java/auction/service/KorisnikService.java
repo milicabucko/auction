@@ -63,4 +63,8 @@ public class KorisnikService {
 		return korisnikRepository.findByKorisnickoIme(kime);
 	}
 
+	public Korisnik findByKorisnickoImeAndLozinka(String korisnickoIme, String lozinka) {
+		return korisnikRepository.findByKorisnickoImeAndLozinka(korisnickoIme, lozinka);
+	}
+
 }
