@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import auction.model.Constants;
 import auction.model.Korisnik;
 import auction.model.Ponuda;
 import auction.model.ZahtevZaNabavku;
@@ -88,6 +89,27 @@ public class PonudaController {
 		
 	}
 	
+	@GetMapping("/getTasks/{korisnikId}")
+	public Map<String, ArrayList<String>> getTasks(@PathVariable Long korisnikId) {
+		
+		Korisnik korisnik = korisnikService.findOne(korisnikId);
+		
+		List<Task> activeUserTasks = taskService.createTaskQuery().taskAssignee(korisnik.getKorisnickoIme()).list();
+		Map<String, ArrayList<String>> mapa = new HashMap<String, ArrayList<String>>();
+		for (Task task : activeUserTasks) {
+			if (mapa.get(task.getName()) == null) {
+				mapa.put(task.getName(), new ArrayList<String>());
+			}
+			String key = task.getName();
+			ArrayList<String> value = mapa.get(key);
+			value.add(task.getId());
+			mapa.put(key, value);
+			
+		}
+		return mapa;
+		
+	}
+	
 	
 	@PostMapping("/sacuvajPonudu/{korisnikId}/{taskId}")
 	public ResponseEntity<Ponuda> saveOffer(@RequestBody Ponuda ponuda, @PathVariable Long korisnikId, @PathVariable String taskId) throws ParseException{
@@ -133,11 +155,14 @@ public class PonudaController {
 	public ResponseEntity<Ponuda> odaberi(@RequestBody Ponuda ponuda, @PathVariable String taskId) {
 		
 		System.out.println("Odabrana ponuda firme: " + ponuda.getFirma().getImeFirme());
+		ponuda.setStatus(Constants.PONUDA_ODABRANA);
+		Ponuda odabranaPonuda = ponudaService.save(ponuda);
 		//Da znas koji je task u pitanju
 		Task task = taskService.createTaskQuery().active().taskId(taskId).singleResult();
 		HashMap<String, Object> variables = (HashMap<String, Object>) runtimeService.getVariables(task.getProcessInstanceId());
 		variables.put("odluka", "odabrana");
 		variables.put("odabranaPonuda", ponuda);
+		variables.put("odabranaFirma", odabranaPonuda.getFirma().getKorisnickoIme());
 		taskService.complete(taskId, variables);
 		
 		return new ResponseEntity<Ponuda>(ponuda, HttpStatus.OK);
@@ -199,15 +224,18 @@ public class PonudaController {
 		
 		System.out.println("Otkazujem zahtev");
 		ZahtevZaNabavku zzn = nabavkaService.findOne(zahtevId);
-		/*Collection<Ponuda> ponude = ponudaService.findByZahtevZaNabavku(zzn);
-		for (Ponuda ponuda : ponude) {
-			ponudaService.delete(ponuda);
-		}
-		nabavkaService.delete(zzn);*/
 
 		//Da znas koji je task u pitanju
 		Task task = taskService.createTaskQuery().active().taskId(taskId).singleResult();
 		HashMap<String, Object> variables = (HashMap<String, Object>) runtimeService.getVariables(task.getProcessInstanceId());
+		variables.remove("ponuda");
+		variables.remove("zahtev");
+		Collection<Ponuda> ponude = ponudaService.findByZahtevZaNabavku(zzn);
+		for (Ponuda ponuda : ponude) {
+			ponudaService.delete(ponuda);
+		}
+		nabavkaService.delete(zzn);
+		
 		variables.put("odluka", "otkaziZahtev");
 		taskService.complete(taskId, variables);
 		
@@ -226,6 +254,44 @@ public class PonudaController {
 		taskService.complete(taskId, variables);
 		
 		return new ResponseEntity<String>(dodatneInfo, HttpStatus.OK);
+	}
+	
+	
+	@PostMapping("/terminPocetkaIzvrsavanja/{terminPocetkaIzvrsavanja}/{taskId}")
+	public ResponseEntity<String> terminPocetkaIzvrsavanja(@PathVariable String terminPocetkaIzvrsavanja, @PathVariable String taskId) {
+		
+		System.out.println("terminPocetkaIzvrsavanja post");
+		
+
+		//Da znas koji je task u pitanju
+		Task task = taskService.createTaskQuery().active().taskId(taskId).singleResult();
+		HashMap<String, Object> variables = (HashMap<String, Object>) runtimeService.getVariables(task.getProcessInstanceId());
+		
+		variables.put("terminPocetkaIzvrsavanja", terminPocetkaIzvrsavanja);
+		taskService.complete(taskId, variables);
+		
+		return new ResponseEntity<String>(terminPocetkaIzvrsavanja, HttpStatus.OK);
+	}
+	
+	@PostMapping("/ocena/{ocena}/{taskId}/{klijent}")
+	public ResponseEntity<String> terminPocetkaIzvrsavanja(@PathVariable Integer ocena, @PathVariable String taskId, @PathVariable Boolean klijent) {
+		
+		System.out.println("Ocena post");
+		
+		
+		//Da znas koji je task u pitanju
+		Task task = taskService.createTaskQuery().active().taskId(taskId).singleResult();
+		HashMap<String, Object> variables = (HashMap<String, Object>) runtimeService.getVariables(task.getProcessInstanceId());
+		if (klijent) {
+			variables.put("ocenaKlijenta", ocena);
+		}
+		else {
+			variables.put("ocenaFirme", ocena);
+		}
+		
+		taskService.complete(taskId, variables);
+		
+		return new ResponseEntity<String>(ocena.toString(), HttpStatus.OK);
 	}
 	
 	

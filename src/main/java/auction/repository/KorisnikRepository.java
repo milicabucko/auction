@@ -13,5 +13,7 @@ public interface KorisnikRepository extends JpaRepository<Korisnik, Long> {
 	Korisnik findByImeFirme(String ime);
 	
 	Collection<Korisnik> findByKategorijaAndIdNotIn(String kategorija, Collection<Long> ids);
+	
+	Korisnik findByKorisnickoIme(String kime);
 
 }

@@ -12,13 +12,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import auction.model.Constants;
+import auction.model.Korisnik;
 import auction.model.Ponuda;
 import auction.model.ZahtevZaNabavku;
 import auction.repository.PonudaRepository;
+import auction.repository.ZahtevZaNabavkuRepository;
 
 @Service
 public class PonudaService {
 
+	@Autowired
+	private ZahtevZaNabavkuRepository zahtevZaNabavkuRepository;
+	
 	@Autowired
 	private PonudaRepository ponudaRepository;
 	
@@ -27,6 +32,9 @@ public class PonudaService {
 	
 	@Autowired
 	private TaskService taskService;
+	
+	@Autowired
+	private KorisnikService korisnikService;
 	
 	public Ponuda save(Ponuda ponuda) {
 		return ponudaRepository.save(ponuda);
@@ -75,6 +83,22 @@ public class PonudaService {
 		System.out.println("Sacuvaj ponudu sa dodatnim pojasnjenjem!");
 		ponudaZaPojasnjenje.setPojasnjenje(pojasnjenje);
 		ponudaRepository.save(ponudaZaPojasnjenje);
+	}
+	
+	public void sacuvajOcene(String korisnickoImeFirme, String korisnickoImeKlijenta, int ocenaFirme, int ocenaKlijenta) {
+		System.out.println("Ocenee!!");
+		Korisnik firma = korisnikService.findByKorisnickoIme(korisnickoImeFirme);
+		firma.setOcena(firma.getOcena() + ocenaFirme);
+		korisnikService.save(firma);
+		Korisnik klijent = korisnikService.findByKorisnickoIme(korisnickoImeKlijenta);
+		klijent.setOcena(klijent.getOcena() + ocenaKlijenta);
+		korisnikService.save(klijent);
+	}
+	
+	public void sacuvajTerminPocetkaIzvrsavanja(String terminPocetkaIzvrsavanja, ZahtevZaNabavku zahtev) {
+		System.out.println("sacuvajTerminPocetkaIzvrsavanja!!");
+		zahtev.setTerminPocetkaIzvrsavanja(terminPocetkaIzvrsavanja);
+		zahtevZaNabavkuRepository.save(zahtev);
 	}
 	
 	

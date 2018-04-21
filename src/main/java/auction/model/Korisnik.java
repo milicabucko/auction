@@ -46,13 +46,15 @@ public class Korisnik implements Serializable{
 	
 	private Double longitude;
 	
+	private Integer ocena;
+	
 	public Korisnik() {
 		// TODO Auto-generated constructor stub
 	}
 
 	public Korisnik(String ime, String prezime, String email, String lozinka, String korisnickoIme,
 			String grad, String adresa, String postanskiBroj, String tipKorisnika, Boolean potvrdjenMail,
-			String imeFirme, String kategorija, Double udaljenost, Double latitude, Double longitude) {
+			String imeFirme, String kategorija, Double udaljenost, Double latitude, Double longitude, Integer ocena) {
 		super();
 		this.ime = ime;
 		this.prezime = prezime;
@@ -69,6 +71,7 @@ public class Korisnik implements Serializable{
 		this.udaljenost = udaljenost;
 		this.latitude = latitude;
 		this.longitude = longitude;
+		this.ocena = ocena;
 	}
 
 	public Long getId() {
@@ -197,6 +200,14 @@ public class Korisnik implements Serializable{
 
 	public void setLongitude(Double longitude) {
 		this.longitude = longitude;
+	}
+
+	public Integer getOcena() {
+		return ocena;
+	}
+
+	public void setOcena(Integer ocena) {
+		this.ocena = ocena;
 	}
 	
 

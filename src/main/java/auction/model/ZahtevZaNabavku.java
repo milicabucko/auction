@@ -27,6 +27,8 @@ public class ZahtevZaNabavku implements Serializable{
 	
 	private String rokZaNabavku;
 	
+	private String terminPocetkaIzvrsavanja;
+	
 	@ManyToOne
 	private Korisnik korisnik;
 	
@@ -35,7 +37,7 @@ public class ZahtevZaNabavku implements Serializable{
 	}
 
 	public ZahtevZaNabavku(String kategorija, String opis, Double maxVrednost, String rokZaPonude,
-			Integer maxBrojPonuda, String rokZaNabavku, Korisnik korisnik) {
+			Integer maxBrojPonuda, String rokZaNabavku, Korisnik korisnik, String terminPocetkaIzvrsavanja) {
 		super();
 		this.kategorija = kategorija;
 		this.opis = opis;
@@ -44,6 +46,7 @@ public class ZahtevZaNabavku implements Serializable{
 		this.maxBrojPonuda = maxBrojPonuda;
 		this.rokZaNabavku = rokZaNabavku;
 		this.korisnik = korisnik;
+		this.terminPocetkaIzvrsavanja = terminPocetkaIzvrsavanja;
 	}
 
 	public Long getId() {
@@ -109,5 +112,15 @@ public class ZahtevZaNabavku implements Serializable{
 	public void setKorisnik(Korisnik korisnik) {
 		this.korisnik = korisnik;
 	}
+
+	public String getTerminPocetkaIzvrsavanja() {
+		return terminPocetkaIzvrsavanja;
+	}
+
+	public void setTerminPocetkaIzvrsavanja(String terminPocetkaIzvrsavanja) {
+		this.terminPocetkaIzvrsavanja = terminPocetkaIzvrsavanja;
+	}
+	
+	
 	
 }

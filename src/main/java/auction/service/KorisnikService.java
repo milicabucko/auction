@@ -58,5 +58,9 @@ public class KorisnikService {
 	public Collection<Korisnik> findByKategorijaAndIdNotIn(String kategorija, Collection<Long> ids) {
 		return korisnikRepository.findByKategorijaAndIdNotIn(kategorija, ids);
 	}
+	
+	public Korisnik findByKorisnickoIme(String kime) {
+		return korisnikRepository.findByKorisnickoIme(kime);
+	}
 
 }

@@ -83,9 +83,9 @@ public class InitializationService {
 		
 		korisnikService.deleteAll();
 		
-		Korisnik korisnik1 = new Korisnik("John", "McClane", "jm@gmail.com", "aa", "aa", "Los Angeles", "Nakatomi 123/12", "21000", "korisnik", true, null, null, null, 45.267136, 19.833549);
-		Korisnik korisnik2 = new Korisnik("Leonardo", "Da Vinci", "ldv@gmail.com", "bb", "bb", "Los Angeles", "Nakatomi 123/12", "21000", "korisnik", true, null, null, null, 45.267136, 20.833549);
-		Korisnik korisnik3 = new Korisnik("Tirion", "Lanister", "tl@gmail.com", "cc", "cc", "Los Angeles", "Nakatomi 123/12", "21000", "korisnik", true, null, null, null, 45.267136, 21.833549);
+		Korisnik korisnik1 = new Korisnik("John", "McClane", "jm@gmail.com", "aa", "aa", "Los Angeles", "Nakatomi 123/12", "21000", "korisnik", true, null, null, null, 45.267136, 19.833549, 0);
+		Korisnik korisnik2 = new Korisnik("Leonardo", "Da Vinci", "ldv@gmail.com", "bb", "bb", "Los Angeles", "Nakatomi 123/12", "21000", "korisnik", true, null, null, null, 45.267136, 20.833549, 0);
+		Korisnik korisnik3 = new Korisnik("Tirion", "Lanister", "tl@gmail.com", "cc", "cc", "Los Angeles", "Nakatomi 123/12", "21000", "korisnik", true, null, null, null, 45.267136, 21.833549, 0);
 
 		
 		identityService.deleteUser("aa");
@@ -130,10 +130,10 @@ public class InitializationService {
 	
 	public void initializeFirme() {
 		
-		Korisnik korisnik1 = new Korisnik("Nektar", "Nektarovic", "nektar@gmail.com", "nektar", "nektar", "Los Angeles", "Nakatomi 123/12", "21000", "firma", true, "Nektar", "proizvodnja pica", 1000.0, 45.267136, 19.833549);
-		Korisnik korisnik2 = new Korisnik("Nektar", "Nektarovic", "nektar@gmail.com", "kola", "kola", "Los Angeles", "Nakatomi 123/12", "21000", "firma", true, "Coca Cola", "proizvodnja pica", 1000.0, 45.267136, 20.833549);
-		Korisnik korisnik3 = new Korisnik("Nektar", "Nektarovic", "nektar@gmail.com", "next", "next", "Los Angeles", "Nakatomi 123/12", "21000", "firma", true, "Next", "proizvodnja pica", 1000.0, 45.267136, 20.813549);
-		Korisnik korisnik4 = new Korisnik("Nektar", "Nektarovic", "nektar@gmail.com", "sky", "sky", "Los Angeles", "Nakatomi 123/12", "21000", "firma", true, "Sky", "proizvodnja pica", 1000.0, 45.267136, 20.833649);
+		Korisnik korisnik1 = new Korisnik("Nektar", "Nektarovic", "nektar@gmail.com", "nektar", "nektar", "Los Angeles", "Nakatomi 123/12", "21000", "firma", true, "Nektar", "proizvodnja pica", 1000.0, 45.267136, 19.833549, 0);
+		Korisnik korisnik2 = new Korisnik("Nektar", "Nektarovic", "nektar@gmail.com", "kola", "kola", "Los Angeles", "Nakatomi 123/12", "21000", "firma", true, "Coca Cola", "proizvodnja pica", 1000.0, 45.267136, 20.833549, 0);
+		Korisnik korisnik3 = new Korisnik("Nektar", "Nektarovic", "nektar@gmail.com", "next", "next", "Los Angeles", "Nakatomi 123/12", "21000", "firma", true, "Next", "proizvodnja pica", 1000.0, 45.267136, 20.813549, 0);
+		Korisnik korisnik4 = new Korisnik("Nektar", "Nektarovic", "nektar@gmail.com", "sky", "sky", "Los Angeles", "Nakatomi 123/12", "21000", "firma", true, "Sky", "proizvodnja pica", 1000.0, 45.267136, 20.833649, 0);
 
 		
 		
